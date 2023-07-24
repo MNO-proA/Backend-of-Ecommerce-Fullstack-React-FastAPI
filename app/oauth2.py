@@ -34,7 +34,7 @@ def verify_access_token(token:str, credentials_exception):
     return token_data #return the user's data
 
 #to get the current user, its depends on the token received from the login route, the password bearer (current_user) can be known from the token decoded
-def get_current_user(token: str = Depends (oauth2_scheme), db: database.SessionLocal = Depends(database.get_db)):
+async def get_current_user(token: str = Depends (oauth2_scheme), db: database.SessionLocal = Depends(database.get_db)):
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

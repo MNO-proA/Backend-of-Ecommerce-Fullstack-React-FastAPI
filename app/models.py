@@ -1,5 +1,5 @@
 from .database import Base
-from sqlalchemy import TIMESTAMP, Column, Index, Integer, String, text
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, Index, Integer, String, text
 
 
 class User(Base):
@@ -17,3 +17,13 @@ class User(Base):
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 Index("idx_username", User.username, postgresql_include=['id'])
+
+
+class Category(Base):
+    __tablename__ = "category"
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, nullable=False)
+    slug = Column(String, nullable=False, unique=True)
+    parentId = Column(Integer, ForeignKey("category.id", ondelete='CASCADE'), nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))

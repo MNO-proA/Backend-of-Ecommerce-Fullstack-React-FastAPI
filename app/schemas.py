@@ -1,4 +1,5 @@
-from typing import Literal, Optional
+from datetime import datetime
+from typing import Literal, Optional, List
 from pydantic import BaseModel, EmailStr, constr
 
 
@@ -50,13 +51,20 @@ class Admin_Token(BaseModel):
 
 
 
-
-
-
 # """Response schema for Profile"""
 # class Profile(BaseModel):   
 #     username: User
 
 
 class TokenData(BaseModel):
-    id:Optional[str] = None # to validate the token data
+    id:Optional[int] = None # to validate the token data
+
+
+"""Request Schema for createCategory"""
+class Category(BaseModel):
+    name:constr(to_lower=True, max_length=80, min_length=2, strip_whitespace=True)
+    slug:str
+    parentId:Optional[int] = None 
+
+
+
