@@ -1,8 +1,9 @@
 from fastapi import status, HTTPException, Depends, APIRouter
-from app import database, schemas, models, utils
+from app.database import db_setup, models
+from app import schemas, utils
 from sqlalchemy.orm import Session
 from slugify import slugify
-from app import database
+from app.database import db_setup
 from typing import List
 from . import admin_oauth2
 
@@ -31,7 +32,7 @@ def getCatAndSubcat(categories, parentId:int = None):
 
 # CREATE CATEGORIES
 @router.post("/createCategory", status_code=status.HTTP_201_CREATED)
-async def category(category:schemas.Category, db: Session = Depends(database.get_db), current_user: int = Depends(admin_oauth2.get_current_user) ):
+async def category(category:schemas.Category, db: Session = Depends(db_setup.get_db), current_user: int = Depends(admin_oauth2.get_current_user) ):
   category.slug = slugify(category.slug)
   new_cat = models.Category(**category.model_dump())
   db.add(new_cat)
@@ -48,7 +49,7 @@ async def category(category:schemas.Category, db: Session = Depends(database.get
 
 # GET ALL CATEGORIES
 @router.get("/getCategory", response_model=None)
-async def getCategory(db: Session = Depends(database.get_db), current_user: int = Depends(admin_oauth2.get_current_user)):
+async def getCategory(db: Session = Depends(db_setup.get_db), current_user: int = Depends(admin_oauth2.get_current_user)):
   categories = db.query(models.Category).all()
 
   if categories == None:

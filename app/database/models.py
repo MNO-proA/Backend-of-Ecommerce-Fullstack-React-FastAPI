@@ -1,4 +1,4 @@
-from .database import Base
+from .db_setup import Base
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, Index, Integer, String, text
 
 

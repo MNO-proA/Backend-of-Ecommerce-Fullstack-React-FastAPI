@@ -1,12 +1,24 @@
 from fastapi import FastAPI
-from. routers import users, auth, profile
-from . import models
-from .database import engine
+from . routers.user import users, auth, profile
+from .database import models
+from .database.db_setup import engine
 from .routers.admin import admin, admin_auth, admin_profile, category
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(
+    title="Fast API Ecommerce",
+    description="Ecommerce API for online business.",
+    version="0.0.1",
+    contact={
+        "name": "Michael Nana Ofosu",
+        "email": "Michaelnanaofosu@gmail.com",
+    },
+    license_info={
+        "name": "MIT",
+    },
+)
+
 
 app.include_router(users.router)
 app.include_router(auth.router)

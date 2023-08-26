@@ -27,15 +27,15 @@ class BaseAdmin(BaseModel):
     profilePicture:str
 
 
-"""Template response for users"""
-class User(BaseModel):
-    id:int
-    firstName:str
-    lastName:str
-    username:str
-    role:str
-    contactNumber:str
-    profilePicture:str
+# """Template response for users"""
+# class User(BaseModel):
+#     id:int
+#     firstName:str
+#     lastName:str
+#     username:str
+#     role:str
+#     contactNumber:str
+#     profilePicture:str
 
 """Response schema for USER TOKEN"""
 class User_Token(BaseModel):

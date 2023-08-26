@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from app import database, schemas, models, utils 
+from app.database import db_setup, models
+from app import schemas, utils
 from app.routers.admin import admin_oauth2
 from sqlalchemy.orm import Session
 
@@ -8,7 +9,7 @@ from sqlalchemy.orm import Session
 router = APIRouter(tags=["Admin Authentication"])
 
 @router.post("/api/admin/signin", response_model= schemas.Admin_Token)
-def login(admin_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
+def login(admin_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(db_setup.get_db)):
 
     admin = db.query(models.User).filter(admin_credentials.username == models.User.email).first()
 

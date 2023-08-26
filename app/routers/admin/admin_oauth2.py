@@ -2,8 +2,9 @@ from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
-from app import models, schemas, database
-from app.config import settings
+from app.database import db_setup, models
+from app import schemas
+from app.database.config import settings
 
 
 # to get a string like this run:
@@ -34,7 +35,7 @@ def verify_access_token(token:str, credentials_exception):
     return token_data #return the user's data
 
 #to get the current user, its depends on the token received from the login route, the password bearer (current_user) can be known from the token decoded
-async def get_current_user(token: str = Depends (admin_oauth2_scheme), db: database.SessionLocal = Depends(database.get_db)):
+async def get_current_user(token: str = Depends (admin_oauth2_scheme), db: db_setup.SessionLocal = Depends(db_setup.get_db)):
 
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

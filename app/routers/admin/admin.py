@@ -1,5 +1,6 @@
 from fastapi import status, HTTPException, Depends, APIRouter
-from app import database, schemas, models, utils
+from app.database import db_setup, models
+from app import schemas, utils
 from sqlalchemy.orm import Session
 
 
@@ -9,7 +10,7 @@ router = APIRouter(
 )
 
 @router.post("/signup")
-async def register(admin: schemas.BaseAdmin, db: Session = Depends(database.get_db) ):
+async def register(admin: schemas.BaseAdmin, db: Session = Depends(db_setup.get_db) ):
     admin_email = db.query(models.User.email).filter(models.User.email == admin.email).first()
     if admin_email:
       raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Admin already registered!")
