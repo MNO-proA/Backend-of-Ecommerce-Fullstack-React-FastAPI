@@ -6,7 +6,7 @@ from app.routers.user import oauth2
 
 
 router = APIRouter(
-    tags=["Profile"]
+    tags=["User Profile"]
     )
 
 

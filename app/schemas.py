@@ -60,11 +60,17 @@ class TokenData(BaseModel):
     id:Optional[int] = None # to validate the token data
 
 
-"""Request Schema for createCategory"""
+"""Request Schema for create-category"""
 class Category(BaseModel):
     name:constr(to_lower=True, max_length=80, min_length=2, strip_whitespace=True)
     slug:str
     parentId:Optional[int] = None 
 
+"""Request Schema for create-product"""
 
 
+class Product(BaseModel):
+    name:constr(to_lower=True, max_length=80, min_length=2, strip_whitespace=True)
+    slug:str
+    description: constr(to_lower=True, max_length=20, min_length=3, strip_whitespace=True)  
+    offer: Optional[int] = None

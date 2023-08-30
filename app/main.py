@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from . routers.user import users, auth, profile
 from .database import models
 from .database.db_setup import engine
-from .routers.admin import admin, admin_auth, admin_profile, category
+from .routers.admin import admin, admin_auth, admin_profile, category, product
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -27,6 +27,7 @@ app.include_router(admin.router)
 app.include_router(admin_auth.router)
 app.include_router(admin_profile.router)
 app.include_router(category.router)
+app.include_router(product.router)
 
 
 

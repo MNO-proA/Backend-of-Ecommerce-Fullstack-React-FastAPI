@@ -9,7 +9,7 @@ router = APIRouter(
   tags=["Admins"]
 )
 
-@router.post("/signup")
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def register(admin: schemas.BaseAdmin, db: Session = Depends(db_setup.get_db) ):
     admin_email = db.query(models.User.email).filter(models.User.email == admin.email).first()
     if admin_email:

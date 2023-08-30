@@ -1,9 +1,9 @@
-from fastapi import status, HTTPException, Depends, APIRouter
+
+from fastapi import status, HTTPException, Depends, APIRouter, UploadFile
 from app.database import db_setup, models
-from app import schemas, utils
+from app import schemas
 from sqlalchemy.orm import Session
 from slugify import slugify
-from app.database import db_setup
 from typing import List
 from . import admin_oauth2
 
@@ -13,7 +13,8 @@ router = APIRouter(
   tags=["Category"]
 )
 
-def getCatAndSubcat(categories, parentId:int = None):
+"""Function used to get a list of categories and its children(subcategories) in a list"""
+def get_categories_and_subcategories(categories, parentId:int = None):
   categoryList = []
   if(parentId == None):
     category = filter(lambda cat: cat.parentId == None, categories)
@@ -26,13 +27,13 @@ def getCatAndSubcat(categories, parentId:int = None):
       "slug": cate.slug,
       "created_at":cate.created_at,
       "updated_at":cate.updated_at,
-      "children": getCatAndSubcat(categories, cate.id)
+      "children": get_categories_and_subcategories(categories, cate.id)
     })
   return categoryList
 
-# CREATE CATEGORIES
-@router.post("/createCategory", status_code=status.HTTP_201_CREATED)
-async def category(category:schemas.Category, db: Session = Depends(db_setup.get_db), current_user: int = Depends(admin_oauth2.get_current_user) ):
+"""Used to create categories"""
+@router.post("/create-category", status_code=status.HTTP_201_CREATED)
+async def create_category(category:schemas.Category, db: Session = Depends(db_setup.get_db), current_user: int = Depends(admin_oauth2.get_current_user) ):
   category.slug = slugify(category.slug)
   new_cat = models.Category(**category.model_dump())
   db.add(new_cat)
@@ -47,13 +48,15 @@ async def category(category:schemas.Category, db: Session = Depends(db_setup.get
   return {"category": cat_object}
 
 
-# GET ALL CATEGORIES
-@router.get("/getCategory", response_model=None)
-async def getCategory(db: Session = Depends(db_setup.get_db), current_user: int = Depends(admin_oauth2.get_current_user)):
+"""Used to retrieve categories"""
+@router.get("/get-category", response_model=None)
+async def get_category(db: Session = Depends(db_setup.get_db)):
   categories = db.query(models.Category).all()
 
   if categories == None:
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"There are no categories")
   
-  categoryList = getCatAndSubcat(categories)
+  categoryList = get_categories_and_subcategories(categories)
   return {"categoryList": categoryList}
+
+

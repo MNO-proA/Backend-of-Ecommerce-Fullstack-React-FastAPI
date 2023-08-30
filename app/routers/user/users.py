@@ -9,7 +9,8 @@ router = APIRouter(
   tags=["Users"]
 )
 
-@router.post("/signup")
+"""Used to create a general user"""
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def register(user: schemas.BaseUsers, db: Session = Depends(db_setup.get_db) ):
     user_email = db.query(models.User.email).filter(models.User.email == user.email).first()
     if user_email:
